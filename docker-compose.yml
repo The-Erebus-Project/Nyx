@@ -1,0 +1,22 @@
+version: "2.2"
+services:
+  server:
+    build: . 
+    container_name: nyx
+    volumes:
+      - appData:/app/data
+      - appTemp:/app/temp
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "9090:9090"
+    environment:
+      - DATA_FOLDER=${DATA_FOLDER:-/app/data}
+      - TEMP_FOLDER=${TEMP_FOLDER:-/app/temp}
+      - DATASOURCE_URL=${DATASOURCE_URL:-jdbc:sqlite:/app/data/nyx.db}
+      - STATIC_RESOURCES_LOCATION=${STATIC_RESOURCES_LOCATION:-file:/app/data,classpath:/static}
+    stdin_open: true
+    tty: true
+volumes:
+  appData:
+  appTemp:

@@ -1,0 +1,7 @@
+.idea
+.vscode
+data
+logs
+temp
+target
+*.db
