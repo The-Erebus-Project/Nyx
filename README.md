@@ -3,9 +3,11 @@
     <img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
     <img src="https://img.shields.io/badge/java-21%2B-orange"/>
     <img src="https://img.shields.io/badge/spring%20boot-3.1%2B-brightgreen"/>
-<p>
+</p>
 
-<img src="src/main/resources/static/res/logo.png" alt="Nyx logo" height="200" style="display: block; margin: 0 auto"/>
+<p align="center">
+    <img src="src/main/resources/static/res/logo.png" alt="Nyx logo" height="200"/>
+</p>
 
 ## The Gateway to Controlled Chaos
 > "In Greek mythology, Nyx was the primordial goddess of night - today, she brings darkness to your performance bottlenecks."
