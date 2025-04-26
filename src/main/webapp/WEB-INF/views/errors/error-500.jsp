@@ -11,7 +11,7 @@
         <c:import url="../elements/navbar.jsp" />
 
         <!-- Main Content -->
-        <div class="container-fluid mt-3">
+        <div class="content-wrapper container-fluid mt-3">
             <div class="error-container mx-auto">
                 <div class="text-center">
                     <h1 class="error-header">Server Error</h1>
@@ -46,5 +46,6 @@
                 </div>
             </div>
         </div>
+        <c:import url="../elements/footer.jsp" />
     </body>
 </html>

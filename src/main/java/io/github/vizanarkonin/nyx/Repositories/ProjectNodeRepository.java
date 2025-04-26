@@ -11,7 +11,7 @@ public interface ProjectNodeRepository extends CrudRepository<ProjectNode, Long>
     ProjectNode findById(long id);
     List<ProjectNode> findAllByProjectId(long id);
     ProjectNode findByNodeId(String nodeId);
-    boolean existsByNodeId(String nodeId);
+    boolean existsByNodeIdAndProjectId(String nodeId, long projectId);
     boolean existsByProjectIdAndIdIn(long projectId, List<Long> ids);
     void deleteAllByProjectId(long projectId);
     void deleteByNodeId(String nodeId);

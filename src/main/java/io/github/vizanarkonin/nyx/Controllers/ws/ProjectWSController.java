@@ -63,7 +63,7 @@ public class ProjectWSController {
     // ######################################################################################################################
 
     /**
-     * Broadcasts a nodeUpdate event to evetyone in node's project room. Used to update existing node entry without
+     * Broadcasts a nodeUpdate event to everyone in node's project room. Used to update existing node entry without
      * fetching entire nodes list and re-drawing the entire table.
      * @param node - ProjectNode instance to update
      */
@@ -72,6 +72,22 @@ public class ProjectWSController {
             socketServer
                 .getRoomOperations(String.valueOf(node.getProjectId()))
                     .sendEvent("nodeUpdated", node);
+        } catch (Exception e) {
+            log.error(e);
+            log.error(ExceptionUtils.getStackTrace(e));
+        }
+    }
+
+    /**
+     * Broadcasts a nodeRemoved event to everyone in node's project room.
+     * Used to remove temporary node from the list upon it's disconnection.
+     * @param node - ProjectNode instance to remove
+     */
+    public void removeNode(ProjectNode node) {
+        try {
+            socketServer
+                .getRoomOperations(String.valueOf(node.getProjectId()))
+                    .sendEvent("nodeRemoved", node.getNodeId());
         } catch (Exception e) {
             log.error(e);
             log.error(ExceptionUtils.getStackTrace(e));
@@ -179,7 +195,7 @@ public class ProjectWSController {
             String nodeId = req.getString("nodeId");
             String description = req.getString("description");
             
-            if (projectNodeRepository.existsByNodeId(nodeId)) {
+            if (projectNodeRepository.existsByNodeIdAndProjectId(nodeId, projectId)) {
                 ackRequest.sendAckData("Node with ID " + nodeId + " already exists");
                 return;
             }

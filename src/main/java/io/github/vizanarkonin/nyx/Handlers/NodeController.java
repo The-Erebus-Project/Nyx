@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import io.github.vizanarkonin.keres.core.utils.TimeUtils;
+import io.github.vizanarkonin.nyx.Models.Project;
 import io.github.vizanarkonin.nyx.Models.ProjectNode;
 import io.github.vizanarkonin.nyx.Repositories.ProjectNodeRepository;
+import io.github.vizanarkonin.nyx.Repositories.ProjectRepository;
 import io.github.vizanarkonin.keres.core.grpc.NodeStatus;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
@@ -119,20 +121,42 @@ public class NodeController {
 
     public static ProjectNode createNode(long projectId, String nodeId, String description) {
         synchronized (nodes) {
-            if(!nodeExists(projectId, nodeId)) {
-                ProjectNode node = new ProjectNode(projectId, nodeId, description);
-                projectNodeRepository.save(node);
+            ProjectRepository projectRepository = ServiceNexus.getBean(ProjectRepository.class);
+            Project project = projectRepository.findById((int)projectId);
+
+            if (!nodes.containsKey(projectId)) {
+                nodes.put(projectId, new HashMap<String, ProjectNode>());
+            }
+
+            String id;
+            if (project.isStrict()) {
+                // In strict mode we expect the node ID to be provided and validated
+                id = nodeId;
+            } else {
+                if (nodeId.equals("")) {
+                    // In non-strict mode empty node ID means that we would like Nyx to register it on it's own, assigning it's own node ID.
+                    id = "TEMP-" + nodes.get(projectId).size();
+                } else {
+                    // But if node ID was provided - we process it by the strict rules
+                    id = nodeId;
+                }
+            }
+
+            if(!nodeExists(projectId, id)) {
+                ProjectNode node = new ProjectNode(projectId, id, description);
+                if (!project.isStrict() && nodeId.equals("")) {
+                    node.setTemporary(true);
+                } else {
+                    projectNodeRepository.save(node);
+                }
 
                 node.setStatus(NodeStatus.DISCONNECTED);
-                if (!nodes.containsKey(projectId)) {
-                    nodes.put(projectId, new HashMap<String, ProjectNode>());
-                }
-                nodes.get(projectId).put(nodeId, node);
+                nodes.get(projectId).put(id, node);
     
                 return node;
             } else {
-                log.info(String.format("Node with ID '%s' is already registered. Returning it", nodeId));
-                return nodes.get(projectId).get(nodeId);
+                log.info(String.format("Node with ID '%s' is already registered. Returning it", id));
+                return nodes.get(projectId).get(id);
             }
         }
     }
@@ -142,7 +166,9 @@ public class NodeController {
         synchronized (nodes) {
             if (nodeExists(projectId, nodeId)) {
                 ProjectNode node = nodes.get(projectId).get(nodeId);
-                node.terminateConnection();
+                if (!node.isTerminated()) {
+                    node.terminateConnection();
+                }
                 nodes.get(projectId).remove(nodeId);
 
                 projectNodeRepository.delete(node);

@@ -9,7 +9,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
-public class CustomErrorController implements ErrorController  {
+public class CustomErrorController extends ControllerBase implements ErrorController {
 
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {

@@ -37,12 +37,24 @@ export function connect(projectId, sessionId) {
             let node = ProjectNode.fromObject(data);
             let row = node.toNodesListEntry();
             $("#nodes_table_rows").append(row);
+            removeNoNodesTableEntry();
             createAndDisplayToastMessage(TOAST_TYPES.INFO, "Node with ID '" + data.nodeId + "' was created");
         });
 
         socket.on("nodesRemoved", function(data) {
             data.forEach((node) => deleteNodeRowEntry(node));
             createAndDisplayToastMessage(TOAST_TYPES.INFO, "Nodes '" + data + "' were removed");
+            if (nodes.size == 0) {
+                createNoNodesTableEntry();
+            }
+        });
+
+        socket.on("nodeRemoved", function(data) {
+            deleteNodeRowEntry(data);
+            createAndDisplayToastMessage(TOAST_TYPES.INFO, "Node '" + data + "' was removed");
+            if (nodes.size == 0) {
+                createNoNodesTableEntry();
+            }
         });
 
         socket.on("nodeUpdated", function(data) {
@@ -53,6 +65,11 @@ export function connect(projectId, sessionId) {
             if (existingRow === null) {
                 let row = node.toNodesListEntry();
                 $("#nodes_table_rows").append(row);
+                if (nodes.size > 0) {
+                    removeNoNodesTableEntry();
+                } else {
+                    createNoNodesTableEntry();
+                }
                 createAndDisplayToastMessage(TOAST_TYPES.INFO, "Node with ID '" + data.nodeId + "' was updated");
             } else {
                 existingRow.replaceWith(node.toNodesListEntry());
@@ -126,11 +143,7 @@ function populateNodes(projectId) {
 
                 regenerateRunDescription();
             } else {
-                let empty_row = document.createElement("tr");
-                empty_row.classList.add("nodes_placeholder");
-                empty_row.innerHTML = '<td colspan="6">No nodes registered</td>';
-
-                $("#nodes_table_rows").append(empty_row);
+                createNoNodesTableEntry();
             }
         }
     ) 
@@ -532,6 +545,21 @@ const TOAST_TYPES = {
     ERROR: {
         label: "Error",
         color: "#fc3103"
+    }
+}
+
+function createNoNodesTableEntry() {
+    let empty_row = document.createElement("tr");
+    empty_row.id = "nodes_placeholder";
+    empty_row.innerHTML = '<td colspan="6">No nodes registered</td>';
+
+    $("#nodes_table_rows").append(empty_row);
+}
+
+function removeNoNodesTableEntry() {
+    let row = document.getElementById("nodes_placeholder");
+    if (row !== null) {
+        row.remove();
     }
 }
 

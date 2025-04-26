@@ -1,6 +1,5 @@
 package io.github.vizanarkonin.nyx.Models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +20,7 @@ import org.awaitility.Awaitility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.vizanarkonin.keres.core.grpc.ParamType;
 import io.github.vizanarkonin.nyx.Controllers.ws.ProjectWSController;
+import io.github.vizanarkonin.nyx.Handlers.NodeController;
 import io.github.vizanarkonin.nyx.Handlers.ServiceNexus;
 import io.github.vizanarkonin.keres.core.grpc.MessageResponse;
 import io.github.vizanarkonin.keres.core.grpc.NodeControlCommand;
@@ -38,7 +38,6 @@ public class ProjectNode implements Comparable<ProjectNode> {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private long projectId;
-    @Column(unique=true)
     private String nodeId;
     private String description;
     // Service properties
@@ -46,6 +45,8 @@ public class ProjectNode implements Comparable<ProjectNode> {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Transient
     private NodeStatus status = NodeStatus.DISCONNECTED;
+    @Transient
+    private boolean isTemporary = false;
     // Observers
     @Transient @JsonIgnore
     private StreamObserver<MessageResponse> requestObserver;
@@ -186,6 +187,10 @@ public class ProjectNode implements Comparable<ProjectNode> {
         log.trace("NodeControlRequest with STOP_SCENARIO command is sent");
     }
 
+    public boolean isTerminated() {
+        return requestObserver == null && responseObserver == null;
+    }
+
     public void terminateConnection() {
         if (requestObserver != null) {
             requestObserver = null;
@@ -198,6 +203,13 @@ public class ProjectNode implements Comparable<ProjectNode> {
         nodeParams.clear();;
 
         updateStatus(NodeStatus.DISCONNECTED);
+
+        // In case of temporary node - we would like to remove it completely, both from NodeController and from all connected clients
+        if (isTemporary) {
+            NodeController.removeNode(projectId, nodeId);
+            ProjectWSController projectWSController = ServiceNexus.getBean(ProjectWSController.class);
+            projectWSController.removeNode(this);
+        }
     }
 
     @Override

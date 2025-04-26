@@ -61,8 +61,9 @@ public class AdminProjectController extends ControllerBase {
                                 RedirectAttributes redirectAttrs, 
                                 Model model, 
                                 Authentication authentication,
-                                @RequestParam(value = "projectName", required = true)           String projectName,
-                                @RequestParam(value = "projectDescription", required = false)   String projectDescription
+                                @RequestParam(value = "projectName",            required = true)    String  projectName,
+                                @RequestParam(value = "projectDescription",     required = false)   String  projectDescription,
+                                @RequestParam(value = "isStrict",               required = false)   boolean isStrict
                             ){
         Project project = projectRepository.findByName(projectName);
         if (project != null) {
@@ -73,6 +74,7 @@ public class AdminProjectController extends ControllerBase {
         project = new Project();
         project.setName(projectName);
         project.setDescription(projectDescription);
+        project.setStrict(isStrict);
         projectRepository.save(project);
 
         FileFolderHandler.createProjectFolder(project.getId());
@@ -87,21 +89,25 @@ public class AdminProjectController extends ControllerBase {
     @PostMapping("edit/{projectId}")
     public String editProject(Model          model,
                               Authentication authentication,
-                              @PathVariable                                                     int    projectId,
-                              @RequestParam(value = "projectName",          required = true)    String projectName,
-                              @RequestParam(value = "projectDescription",   required = false)   String projectDescription) {
+                              @PathVariable                                                     int         projectId,
+                              @RequestParam(value = "projectName",          required = true)    String      projectName,
+                              @RequestParam(value = "projectDescription",   required = false)   String      projectDescription,
+                              @RequestParam(value = "isStrict",             required = false)   boolean     isStrict
+                            ){
         Project project = projectRepository.findById(projectId);
 
         if (!projectName.equals(project.getName()))
             project.setName(projectName);
         if (!projectDescription.equals(project.getDescription()))
             project.setDescription(projectDescription);
+        if (project.isStrict() != isStrict)
+            project.setStrict(isStrict);
         
         projectRepository.save(project);
         model.addAttribute("project", project);
         model.addAttribute("successMessage", "Project was updated successfully");
 
-        String details = String.format("Project changes:<br>Name: %s<br>Description:%s", project.getName(), project.getDescription());
+        String details = String.format("Project changes:<br>Name: %s<br>Description:%s<br>Is strict: %b", project.getName(), project.getDescription(), isStrict);
         logActivity(authentication.getName(), String.format(UserActivities.EDIT_PROJECT, project.getName(), project.getId()), details);
 
         return "admin/editProject";

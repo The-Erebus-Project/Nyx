@@ -1,6 +1,7 @@
 package io.github.vizanarkonin.nyx.Controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import io.github.vizanarkonin.nyx.Models.UserActivity;
 import io.github.vizanarkonin.nyx.Repositories.UserActivitiesRepository;
@@ -27,6 +28,14 @@ public abstract class ControllerBase {
     protected UserRepository userRepository;
     @Autowired
     protected UserActivitiesRepository userActivitiesRepository;
+
+    @Autowired
+    private Map<String, String> versionInfo;
+
+    @ModelAttribute
+    public void addVersionInfo(Model model) {
+        model.addAllAttributes(versionInfo);
+    }
 
     @ExceptionHandler (Exception.class)
     public String exceptionHandler(final Exception e, Model model) {

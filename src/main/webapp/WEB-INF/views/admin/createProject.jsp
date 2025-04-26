@@ -13,7 +13,7 @@
     <body>
         <c:import url="../elements/navbar.jsp" />
 
-        <div class="container-fluid mt-3">
+        <div class="content-wrapper container-fluid mt-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/" >
@@ -49,6 +49,20 @@
                         <label for="projectDescription" class="form-label">Project Description</label>
                         <textarea class="form-control" id="projectDescription" name="projectDescription" rows="4"></textarea>
                     </div>
+
+                    <!-- Strict mode switch-->
+                    <div class="mb-4">
+                        <label for="isStrict" class="form-label">
+                            Is Strict
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="right" title="If the project is set to strict mode - only registered nodes can connect to it. If not - Nyx will either register it itself, or if no node ID is provided - assign one on it's own">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            </svg>
+                        </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="isStrict" name="isStrict" role="switch">
+                        </div>
+                    </div>
                     
                     <!-- Form Actions -->
                     <div class="form-actions">
@@ -66,5 +80,6 @@
                 </form>
             </div>
         </div>
+        <c:import url="../elements/footer.jsp" />
     </body>
 </html>

@@ -83,7 +83,7 @@
         <title>Nyx -Login page</title>
     </head>
     <body class="bg-light">
-        <div class="container">
+        <div class="container content-wrapper">
             <div class="login-container">
                 <div class="login-logo">
                     <img src="/res/logo.png" alt="Logo" height="128px">
@@ -134,6 +134,7 @@
                 </form>
             </div>
         </div>
+        <c:import url="elements/footer.jsp" />
         
         <!-- Password Toggle Script -->
         <script>

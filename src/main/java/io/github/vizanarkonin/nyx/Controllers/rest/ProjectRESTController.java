@@ -50,7 +50,7 @@ public class ProjectRESTController {
         String nodeId = request.getString("nodeId");
         String description = request.getString("description");
         
-        if (projectNodeRepository.existsByNodeId(nodeId)) {
+        if (projectNodeRepository.existsByNodeIdAndProjectId(nodeId, projectId)) {
             response.setStatus(HttpServletResponse.SC_PRECONDITION_FAILED);
             return "{\"message\": \"Node with this ID already exists\"}";
         }

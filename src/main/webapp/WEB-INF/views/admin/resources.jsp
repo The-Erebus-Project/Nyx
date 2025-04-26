@@ -89,7 +89,7 @@
     <body>
         <c:import url="../elements/navbar.jsp" />
 
-        <div class="container-fluid mt-3">
+        <div class="content-wrapper container-fluid mt-3">
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -220,5 +220,6 @@
                 </div>
             </div>
         </div>
+        <c:import url="../elements/footer.jsp" />
     </body>
 </html>

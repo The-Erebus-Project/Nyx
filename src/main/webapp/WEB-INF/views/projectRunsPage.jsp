@@ -56,8 +56,8 @@
         <title>Nyx - ${projectName} project runs list</title>
     </head>
     <body>
-        <div class="main-container">
-            <c:import url="elements/navbar.jsp" />
+        <c:import url="elements/navbar.jsp" />
+        <div class="content-wrapper main-container">
             <!-- Main Content -->
             <div class="container-fluid mt-3">
                 <!-- Breadcrumb -->
@@ -167,5 +167,6 @@
                 </div>
             </div>
         </div>
+        <c:import url="elements/footer.jsp" />
     </body>
 </html>

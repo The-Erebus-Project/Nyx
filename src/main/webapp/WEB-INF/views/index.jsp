@@ -15,7 +15,7 @@
     <body>
         <c:import url="elements/navbar.jsp" />
         <!-- Main Content -->
-        <div class="container mt-4">
+        <div class="content-wrapper container mt-4">
             <div class="row mb-4">
                 <div class="row mb-4">
                     <div class="col">
@@ -55,5 +55,6 @@
                 </c:choose>
             </div>
         </div>
+        <c:import url="elements/footer.jsp" />
     </body>
 </html>

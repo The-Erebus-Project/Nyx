@@ -68,4 +68,4 @@ By default, Nyx uses plaintext gRPC connection. If you'd like to enable mTLS - p
 - Bootstrap 5
 - Chart.JS
 ### Data
-- SQLite or JDBC
+- JDBC

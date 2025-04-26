@@ -68,7 +68,7 @@
     <body>
         <c:import url="elements/navbar.jsp" />
         <!-- Main Content -->
-        <div class="container-fluid mt-3">
+        <div class="content-wrapper container-fluid mt-3">
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -120,6 +120,7 @@
                 </form>
             </div>
         </div>
+        <c:import url="elements/footer.jsp" />
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {

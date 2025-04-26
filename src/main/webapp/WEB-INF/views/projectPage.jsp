@@ -31,7 +31,7 @@
         <c:import url="elements/navbar.jsp" />
         
         <!-- Main Content -->
-        <div class="container-fluid mt-3">
+        <div class="content-wrapper container-fluid mt-3">
             <!-- Breadcrumb -->
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -277,5 +277,6 @@
             </div>
         </div>
         <div id="toasts_container" class="toast-container position-static position-fixed bottom-0 end-0 p-3"></div>
+        <c:import url="elements/footer.jsp" />
     </body>
 </html>
